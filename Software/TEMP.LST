@@ -1,0 +1,311 @@
+A51 MACRO ASSEMBLER  TEMP                                                                 07/27/2020 20:13:35 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.02b
+OBJECT MODULE PLACED IN TEMP.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE TEMP.ASM SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;*********************************************************************
+                       2     ;TITAL          : TEMPERATURE ALRAM FOR COVID 19 SITUATION USING LM35
+                       3     ;**********************************************************************
+                       4     ;       P0.0    =       ADC D0
+                       5     ;       P0.1    =       ADC D1
+                       6     ;       P0.2    =       ADC D2
+                       7     ;       P0.3    =       ADC D3
+                       8     ;       P0.4    =       ADC D4
+                       9     ;       P0.5    =       ADC D5
+                      10     ;       P0.6    =       ADC D6
+                      11     ;       P0.7    =       ADC D7
+                      12     ;
+                      13     ;       P1.0    =       LCD D0
+                      14     ;       P1.1    =       LCD D1
+                      15     ;       P1.2    =       LCD D2
+                      16     ;       P1.3    =       LCD D3
+                      17     ;       P1.4    =       LCD D4
+                      18     ;       P1.5    =       LCD D5
+                      19     ;       P1.6    =       LCD D6
+                      20     ;       P1.7    =       LCD D7
+                      21     ;
+                      22     ;       P2.0    =       ADC A
+                      23     ;       P2.1    =               ADC B
+                      24     ;       P2.2    =               ADC C
+                      25     ;       P2.3    =               OUTPUT LED
+                      26     ;       P2.4    =       ALE
+                      27     ;       P2.5    =       OE
+                      28     ;       P2.6    =       SOC
+                      29     ;       P2.7    =               EOC
+                      30     ;
+                      31     ;       P3.0    =       
+                      32     ;       P3.1    =       
+                      33     ;       P3.2    =       LCD RS
+                      34     ;       P3.3    =       LCD R/W
+                      35     ;       P3.4    =       LCD E
+                      36     ;       P3.5    =
+                      37     ;       P3.6    =       
+                      38     ;       P3.7    =       
+                      39     ;
+                      40     ;               53H             =               TEMPERATURE SET POINT
+                      41     ;Program starts here
+0000                  42             ORG     0000H                   ;START
+0000 12000E           43                     LCALL   INILIZE_SYSTEM
+0003 1200AE           44     REPEAT: LCALL   ADC_INTERFACING
+0006 120125           45             LCALL   TEMP_DISPLAY
+0009 120146           46             LCALL   TAKE_ACTION
+000C 80F5             47             SJMP    REPEAT
+                      48     ;--------------------------------------------------------------------------
+                      49     ;--------------------------------------------------------------------------
+000E                  50     INILIZE_SYSTEM:
+000E C2A3             51                     CLR             P2.3                    ;LED OFF
+0010 7438             52             MOV             A,#38H                  ;INITIALIZE LCD
+0012 12015C           53                     LCALL   COMMAND
+0015 740E             54                     MOV             A,#0EH
+0017 12015C           55                     LCALL   COMMAND
+001A 7406             56                     MOV             A,#06H
+001C 12015C           57                     LCALL   COMMAND
+001F 7401             58                     MOV             A,#01H
+A51 MACRO ASSEMBLER  TEMP                                                                 07/27/2020 20:13:35 PAGE     2
+
+0021 12015C           59                     LCALL   COMMAND
+0024 755337           60             MOV     53H,#37H                ;SET TEMP SETPOINT
+0027 757300           61             MOV     73H,#00H                ;
+                      62     
+002A 7480             63             MOV             A,#080H                 ;INITIALIZE LCD
+002C 12015C           64                     LCALL   COMMAND
+002F 7422             65                     MOV             A,#'"'
+0031 120169           66                     LCALL   DISPLAY
+0034 7453             67                     MOV             A,#'S'
+0036 120169           68                     LCALL   DISPLAY
+0039 7455             69                     MOV             A,#'U'
+003B 120169           70                     LCALL   DISPLAY
+003E 7444             71                     MOV             A,#'D'
+0040 120169           72                     LCALL   DISPLAY
+0043 7448             73                     MOV             A,#'H'
+0045 120169           74                     LCALL   DISPLAY
+0048 7449             75                     MOV             A,#'I'
+004A 120169           76                     LCALL   DISPLAY
+004D 7453             77                     MOV             A,#'S'
+004F 120169           78                     LCALL   DISPLAY
+0052 7448             79                     MOV             A,#'H'
+0054 120169           80                     LCALL   DISPLAY
+0057 742C             81                     MOV             A,#','
+0059 120169           82                     LCALL   DISPLAY
+005C 7456             83                     MOV             A,#'V'
+005E 120169           84                     LCALL   DISPLAY
+0061 742E             85                     MOV             A,#'.'
+0063 120169           86                     LCALL   DISPLAY
+0066 7449             87                     MOV             A,#'I'
+0068 120169           88                     LCALL   DISPLAY
+006B 742E             89                     MOV             A,#'.'
+006D 120169           90                     LCALL   DISPLAY
+0070 7454             91                     MOV             A,#'T'
+0072 120169           92                     LCALL   DISPLAY
+0075 742E             93                     MOV             A,#'.'
+0077 120169           94                     LCALL   DISPLAY
+007A 7422             95                     MOV             A,#'"'
+007C 120169           96                     LCALL   DISPLAY
+                      97             
+007F 74C2             98                     MOV             A,#0C2H                 ;INITIALIZE LCD
+0081 12015C           99                     LCALL   COMMAND
+0084 7454            100                     MOV             A,#'T'
+0086 120169          101                     LCALL   DISPLAY
+0089 7445            102                     MOV             A,#'E'
+008B 120169          103                     LCALL   DISPLAY
+008E 744D            104                     MOV             A,#'M'
+0090 120169          105                     LCALL   DISPLAY
+0093 7450            106                     MOV             A,#'P'
+0095 120169          107                     LCALL   DISPLAY
+0098 7420            108                     MOV             A,#' '
+009A 120169          109                     LCALL   DISPLAY
+009D 743D            110                     MOV             A,#'='
+009F 120169          111                     LCALL   DISPLAY
+00A2 7420            112                     MOV             A,#' '
+00A4 120169          113                     LCALL   DISPLAY
+00A7 C2A0            114                     CLR             P2.0                    ;SELECT ADC CHANNAL 0
+00A9 C2A1            115                     CLR             P2.1
+00AB C2A2            116                     CLR             P2.2
+00AD 22              117                     RET
+                     118     ;--------------------------------------------------------------------------
+00AE                 119     ADC_INTERFACING:
+00AE 1200BD          120             LCALL   SEND_SOC
+00B1 1200C9          121             LCALL   CHECK_EOC
+00B4 1200CF          122             LCALL   READ_OUTPUT_OF_ADC
+00B7 1200D2          123             LCALL   HEX2BCD
+00BA F573            124             MOV     73H,A
+A51 MACRO ASSEMBLER  TEMP                                                                 07/27/2020 20:13:35 PAGE     3
+
+00BC 22              125             RET
+                     126     ;--------------------------------------------------------------------------
+00BD                 127     SEND_SOC:       
+00BD D2A4            128             SETB    P2.4
+00BF D2A6            129             SETB    P2.6
+00C1 120153          130             LCALL   DELAY
+00C4 C2A4            131             CLR     P2.4
+00C6 C2A6            132                     CLR     P2.6            
+00C8 22              133                     RET
+                     134     ;--------------------------------------------------------------------------
+00C9                 135     CHECK_EOC:
+00C9 20A702          136             JB      P2.7,RETURN
+00CC 80FB            137             SJMP    CHECK_EOC
+00CE 22              138     RETURN: RET 
+                     139     ;--------------------------------------------------------------------------
+00CF                 140     READ_OUTPUT_OF_ADC:
+00CF E580            141             MOV     A,P0
+00D1 22              142             RET              
+                     143     ;--------------------------------------------------------------------------
+00D2                 144     HEX2BCD:        
+00D2 F540            145             MOV     40H,A                   ;SAVE THE HEX TEMPERATURE AT 40H LOCATION
+00D4 B41D04          146             CJNE    A,#1DH,CHECK_30H
+00D7 7429            147             MOV     A,#29H
+00D9 8034            148             SJMP    RETURN_RE
+00DB                 149     CHECK_30H:
+00DB B41E04          150             CJNE    A,#1EH,CHECK_31H
+00DE 7430            151             MOV     A,#30H
+00E0 802D            152             SJMP    RETURN_RE
+00E2                 153     CHECK_31H:
+00E2 B41F04          154             CJNE    A,#1FH,CHECK_32H
+00E5 7431            155             MOV     A,#31H
+00E7 8026            156             SJMP    RETURN_RE
+00E9                 157     CHECK_32H:
+00E9 B42004          158             CJNE    A,#20H,CHECK_33H
+00EC 7432            159             MOV     A,#32H
+00EE 801F            160             SJMP    RETURN_RE
+00F0                 161     CHECK_33H:
+00F0 B42104          162             CJNE    A,#21H,CHECK_34H
+00F3 7433            163             MOV     A,#33H
+00F5 8018            164             SJMP    RETURN_RE
+00F7                 165     CHECK_34H:
+00F7 B42204          166             CJNE    A,#22H,CHECK_35H
+00FA 7434            167             MOV     A,#34H
+00FC 8011            168             SJMP    RETURN_RE
+00FE                 169     CHECK_35H:
+00FE 54F0            170             ANL     A,#0F0H         ;LOWER NIBBLE IS MASKED
+0100 C4              171             SWAP    A                               ;SWAP THE NOBBLE
+0101 FB              172             MOV     R3,A                    ;R3 IS COUNTER
+0102 E4              173             CLR     A                               ;A = 00H
+0103 2416            174     UP123:  ADD             A,#16H          ;ADD 16 IN A
+0105 D4              175             DA      A                               ;CONVETRT IT INTO BCD
+0106 DBFB            176             DJNZ    R3,UP123                ;DO ADDITION UNTILL R3 = 0       
+0108 FB              177             MOV     R3,A                    ;SAVE THE RESULT OF MULTIPLICATION INTO R3
+                     178      
+0109 E540            179             MOV     A,40H                   ;TAKE THE NUMBER FROM 40H INTO A
+010B 540F            180             ANL     A,#0FH          ;MASK THE MSB
+010D 2B              181             ADD     A,R3                    ;DO ADDITION OF R3 AND LSB
+010E D4              182             DA      A                               ;CONVERT IT INTO BCD
+010F                 183     RETURN_RE:
+010F F540            184             MOV     40H,A                   ;SAVE THE BCD TEMPERATURE AT 40H LOCATION
+0111 22              185             RET
+                     186     ;--------------------------------------------------------------------------
+0112                 187     BCD2ASCII:
+0112 FB              188                     MOV     R3,A
+0113 54F0            189             ANL     A,#0F0H
+0115 C4              190             SWAP    A
+A51 MACRO ASSEMBLER  TEMP                                                                 07/27/2020 20:13:35 PAGE     4
+
+0116 120122          191             LCALL   CONVERT_IT
+0119 FC              192             MOV     R4,A
+011A EB              193             MOV     A,R3
+011B 540F            194             ANL     A,#0FH
+011D 120122          195             LCALL   CONVERT_IT
+0120 FB              196             MOV     R3,A
+0121 22              197             RET
+                     198     ;--------------------------------------------------------------------------
+0122 4430            199     CONVERT_IT:ORL     A,#30H
+0124 22              200             RET
+                     201     ;--------------------------------------------------------------------------
+0125 74C9            202     TEMP_DISPLAY:   MOV     A,#0C9H              ;STARTING ADDRESS OF LINE 1 OF LCD RAM
+0127 315C            203                     ACALL   COMMAND
+0129 E573            204                     MOV     A,73H
+012B 120112          205                     LCALL   BCD2ASCII
+012E EC              206                     MOV     A,R4
+012F 120169          207                     LCALL   DISPLAY
+0132 EB              208                     MOV     A,R3
+0133 120169          209                     LCALL   DISPLAY
+0136 74DF            210                     MOV     A,#0DFH
+0138 120169          211                     LCALL   DISPLAY
+013B 7443            212                     MOV     A,#'C'
+013D 120169          213                     LCALL   DISPLAY
+0140 742E            214                     MOV     A,#'.'
+0142 120169          215                     LCALL   DISPLAY
+0145 22              216                     RET
+                     217     ;-----------------------------------------------------------------------------
+0146                 218     TAKE_ACTION:
+0146 E573            219             MOV     A,73H
+0148 B55303          220             CJNE    A,53H,NEXT_LOWER
+014B D2A3            221     T_HIGH: SETB    P2.3
+014D 22              222                     RET
+014E                 223     NEXT_LOWER:
+014E 50FB            224                     JNC             T_HIGH
+0150 C2A3            225             CLR     P2.3
+0152 22              226             RET
+                     227     ;--------------------------------------------------------------------------
+0153 7FFF            228              DELAY: MOV     R7,#0FFH
+0155 7EFF            229              LOOP1: MOV     R6,#0FFH
+0157 DEFE            230               LOOP: DJNZ    R6,LOOP
+0159 DFFA            231                     DJNZ    R7,LOOP1
+015B 22              232                     RET
+                     233     ;-----------------------------------------------------------------------------
+                     234     ;LCD Strobe Command
+015C 3153            235            COMMAND: ACALL   DELAY
+015E F590            236                     MOV     P1,A        ;Command Character in Port P1
+0160 C2B2            237                     CLR     P3.2        ;Command resister chosen
+0162 C2B3            238                     CLR     P3.3        ; write enable
+0164 D2B4            239                     SETB    P3.4       ; Strobe Character to display
+0166 C2B4            240                     CLR     P3.4
+0168 22              241                     RET             ;Return
+                     242     ;-----------------------------------------------------------------------------
+0169 3153            243            DISPLAY: ACALL   DELAY
+016B F590            244                     MOV     P1,A        ;take data to be displayed
+016D D2B2            245                     SETB    P3.2       ;RS=P3.2= 1 to select data register
+016F C2B3            246                     CLR     P3.3        ;write enable
+0171 D2B4            247                     SETB    P3.4       ;strobe character to be displayed
+0173 C2B4            248                     CLR     P3.4
+0175 22              249                     RET             ; Return
+                     250     ;-----------------------------------------------------------------------------
+                     251                                     END
+A51 MACRO ASSEMBLER  TEMP                                                                 07/27/2020 20:13:35 PAGE     5
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ADC_INTERFACING. .  C ADDR   00AEH   A   
+BCD2ASCII. . . . .  C ADDR   0112H   A   
+CHECK_30H. . . . .  C ADDR   00DBH   A   
+CHECK_31H. . . . .  C ADDR   00E2H   A   
+CHECK_32H. . . . .  C ADDR   00E9H   A   
+CHECK_33H. . . . .  C ADDR   00F0H   A   
+CHECK_34H. . . . .  C ADDR   00F7H   A   
+CHECK_35H. . . . .  C ADDR   00FEH   A   
+CHECK_EOC. . . . .  C ADDR   00C9H   A   
+COMMAND. . . . . .  C ADDR   015CH   A   
+CONVERT_IT . . . .  C ADDR   0122H   A   
+DELAY. . . . . . .  C ADDR   0153H   A   
+DISPLAY. . . . . .  C ADDR   0169H   A   
+HEX2BCD. . . . . .  C ADDR   00D2H   A   
+INILIZE_SYSTEM . .  C ADDR   000EH   A   
+LOOP . . . . . . .  C ADDR   0157H   A   
+LOOP1. . . . . . .  C ADDR   0155H   A   
+NEXT_LOWER . . . .  C ADDR   014EH   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+READ_OUTPUT_OF_ADC  C ADDR   00CFH   A   
+REPEAT . . . . . .  C ADDR   0003H   A   
+RETURN . . . . . .  C ADDR   00CEH   A   
+RETURN_RE. . . . .  C ADDR   010FH   A   
+SEND_SOC . . . . .  C ADDR   00BDH   A   
+TAKE_ACTION. . . .  C ADDR   0146H   A   
+TEMP_DISPLAY . . .  C ADDR   0125H   A   
+T_HIGH . . . . . .  C ADDR   014BH   A   
+UP123. . . . . . .  C ADDR   0103H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
